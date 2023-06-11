@@ -22,12 +22,13 @@ const HomeScreen = props => {
   function getData() {
     const ts = 1;
     const md5_hash_value = md5(ts + API_KEYS.private_key + API_KEYS.public_key);
-    console.log(md5_hash_value);
+    // console.log(md5_hash_value);
     const url =
       'https://gateway.marvel.com:443/v1/public/comics?ts=1&apikey=' +
       API_KEYS.public_key +
       '&hash=' +
       md5_hash_value;
+    console.log(url);
     return fetch(url)
       .then(response => response.json())
       .then(json => {
@@ -62,26 +63,48 @@ const HomeScreen = props => {
     comicStyle: {
       padding: 5,
       margin: 10,
-      flex: 1,
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',
+      backgroundColor: COLORS.uranianblue,
+      height: 220,
+      borderRadius: 7,
     },
     comicTitleStyle: {
       width: 150,
       color: COLORS.oxfordblue,
       fontFamily: 'NotoSans-Regular',
+      fontSize: 15,
+      marginTop: 7,
+    },
+    comicPriceStyle: {
+      padding: 5,
+      marginTop: 5,
+      color: COLORS.white,
+      backgroundColor: COLORS.spanishgreen,
+      fontFamily: 'NotoSans-Regular',
+      fontWeight: 'bold',
+      fontSize: 16,
+      borderRadius: 9,
+      width: '55%',
     },
     comicImageStyle: {
-      width: 100,
-      height: 150,
+      width: 90,
+      height: 95,
     },
   });
 
-  const Item = ({title, path, extension}) => (
+  const Item = ({title, id, path, extension, description}) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('description');
+        navigation.navigate('description', {
+          id: id,
+          path: path,
+          extension: extension,
+          description: description,
+          title: title,
+        });
       }}>
       <View style={styles.comicStyle}>
         <Image
@@ -93,6 +116,7 @@ const HomeScreen = props => {
         <Text style={styles.comicTitleStyle} numberOfLines={1}>
           {title}
         </Text>
+        <Text style={styles.comicPriceStyle}>Rs. 2100</Text>
       </View>
     </TouchableOpacity>
   );
@@ -110,9 +134,11 @@ const HomeScreen = props => {
             data={comics}
             renderItem={({item}) => (
               <Item
+                id={item.id}
                 title={item.title}
                 path={item.thumbnail.path}
                 extension={item.thumbnail.extension}
+                description={item.description}
               />
             )}
             keyExtractor={item => item.id}
