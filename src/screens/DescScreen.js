@@ -1,8 +1,12 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
 const DescScreen = () => {
-  return <View></View>;
+  return (
+    <View>
+      <Text>DescScreen</Text>
+    </View>
+  );
 };
 
 export default DescScreen;
